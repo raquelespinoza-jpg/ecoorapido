@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Realizado Para Todos - Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+            color: #333;
+            padding-bottom: 80px;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            padding: 1.2rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .logo-icon {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #00b388 0%, #00d69f 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.4rem;
+            box-shadow: 0 4px 15px rgba(0,179,136,0.3);
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo-text .name {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #1a1a1a;
+        }
+
+        .logo-text .subtitle {
+            font-size: 0.75rem;
+            color: #999;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .notification-btn {
+            position: relative;
+            width: 40px;
+            height: 40px;
+            background: #f0f9f6;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .notification-btn:hover {
+            background: #e0f5ee;
+            transform: scale(1.05);
+        }
+
+        .notification-btn i {
+            color: #00b388;
+            font-size: 1.2rem;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #ff4757;
+            color: white;
+            font-size: 0.65rem;
+            padding: 0.2rem 0.4rem;
+            border-radius: 10px;
+            font-weight: bold;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .user-avatar {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #00b388 0%, #00d69f 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+            border: 3px solid #f0f9f6;
+            transition: all 0.3s;
+        }
+
+        .user-avatar:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(0,179,136,0.4);
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        .user-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #1a1a1a;
+        }
+
+        .user-role {
+            font-size: 0.75rem;
+            color: #00b388;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.5rem;
+        }
+
+        /* Menu Card */
+        .menu-card {
+            background: white;
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            animation: slideInDown 0.5s ease-out;
+        }
+
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 0.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .menu-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background: #00b388;
+            transform: scaleY(0);
+            transition: transform 0.3s;
+        }
+
+        .menu-item:hover {
+            background: #f0f9f6;
+            transform: translateX(5px);
+        }
+
+        .menu-item:hover::before {
+            transform: scaleY(1);
+        }
+
+        .menu-item.active {
+            background: linear-gradient(135deg, #f0f9f6 0%, #e0f5ee 100%);
+        }
+
+        .menu-item.logout {
+            color: #ff4757;
+        }
+
+        .menu-item.logout:hover {
+            background: #fff5f5;
+        }
+
+        .menu-icon {
+            width: 45px;
+            height: 45px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            font-size: 1.3rem;
+            transition: all 0.3s;
+        }
+
+        .menu-item:hover .menu-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .menu-item:nth-child(1) .menu-icon { color: #00b388; }
+        .menu-item:nth-child(2) .menu-icon { color: #5f27cd; }
+        .menu-item:nth-child(3) .menu-icon { color: #ff9f43; }
+        .menu-item:nth-child(4) .menu-icon { color: #48dbfb; }
+        .menu-item:nth-child(5) .menu-icon { color: #ff6b6b; }
+        .menu-item:nth-child(6) .menu-icon { color: #a29bfe; }
+
+        .menu-text {
+            font-weight: 500;
+            flex: 1;
+        }
+
+        .menu-emoji {
+            font-size: 1.2rem;
+            margin-left: 0.5rem;
+        }
+
+        /* Promo Card */
+        .promo-card {
+            background: linear-gradient(135deg, #00b388 0%, #00d69f 100%);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0,179,136,0.3);
+            animation: slideInUp 0.6s ease-out;
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .promo-card::before {
+            content: '📦';
+            position: absolute;
+            font-size: 15rem;
+            opacity: 0.05;
+            right: -3rem;
+            bottom: -4rem;
+            transform: rotate(-15deg);
+        }
+
+        .promo-card::after {
+            content: '';
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            top: -100px;
+            left: -50px;
+        }
+
+        .promo-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .promo-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .promo-title::before {
+            content: '🎁';
+            font-size: 1.8rem;
+        }
+
+        .promo-text {
+            font-size: 0.95rem;
+            opacity: 0.95;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .promo-btn {
+            background: white;
+            color: #00b388;
+            border: none;
+            padding: 0.9rem 2rem;
+            border-radius: 25px;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .promo-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+
+        /* Envíos Section */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.2rem;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-title::before {
+            content: '📨';
+            font-size: 1.5rem;
+        }
+
+        .view-all {
+            color: #00b388;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            transition: all 0.3s;
+        }
+
+        .view-all:hover {
+            gap: 0.6rem;
+        }
+
+        /* Envío Card */
+        .envio-card {
+            background: white;
+            border-radius: 16px;
+            padding: 1.3rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.06);
+            transition: all 0.3s;
+            cursor: pointer;
+            animation: fadeIn 0.5s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .envio-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 5px;
+            background: linear-gradient(180deg, #00b388, #00d69f);
+            transform: scaleY(0);
+            transition: transform 0.3s;
+        }
+
+        .envio-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+        }
+
+        .envio-card:hover::before {
+            transform: scaleY(1);
+        }
+
+        .envio-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .envio-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #00b388 0%, #00d69f 100%);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0,179,136,0.25);
+        }
+
+        .envio-info {
+            flex: 1;
+        }
+
+        .envio-code {
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: #1a1a1a;
+            margin-bottom: 0.3rem;
+        }
+
+        .envio-route {
+            font-size: 0.85rem;
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .envio-route i {
+            color: #00b388;
+        }
+
+        .envio-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1rem;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .status-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .status-badge.entregado {
+            background: #d4f8d4;
+            color: #2ecc71;
+        }
+
+        .status-badge.transito {
+            background: #d4e8ff;
+            color: #3498db;
+        }
+
+        .status-badge.pendiente {
+            background: #fff3d4;
+            color: #f39c12;
+        }
+
+        .envio-date {
+            font-size: 0.85rem;
+            color: #999;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 0.8rem 1rem;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .nav-menu {
+            max-width: 600px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.3rem;
+            text-decoration: none;
+            color: #999;
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: 12px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .nav-item i {
+            font-size: 1.4rem;
+            transition: all 0.3s;
+        }
+
+        .nav-item:hover {
+            color: #00b388;
+            background: #f0f9f6;
+        }
+
+        .nav-item.active {
+            color: white;
+            background: linear-gradient(135deg, #00b388 0%, #00d69f 100%);
+            box-shadow: 0 4px 15px rgba(0,179,136,0.3);
+        }
+
+        .nav-item.active i {
+            transform: scale(1.15);
+        }
+
+        .client-btn {
+            background: linear-gradient(135deg, #00b388 0%, #00d69f 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 4px 15px rgba(0,179,136,0.3);
+            transition: all 0.3s;
+        }
+
+        .client-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,179,136,0.4);
+        }
+
+        /* Floating Button */
+        .fab-btn {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff8e53 100%);
+            border-radius: 50%;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 6px 25px rgba(255,107,107,0.4);
+            transition: all 0.3s;
+            z-index: 999;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .fab-btn:hover {
+            transform: scale(1.15) rotate(90deg);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .promo-title {
+                font-size: 1.2rem;
+            }
+
+            .menu-card {
+                padding: 1rem;
+            }
+
+            .user-info {
+                display: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo-text .name {
+                font-size: 0.95rem;
+            }
+
+            .section-title {
+                font-size: 1.1rem;
+            }
+
+            .envio-code {
+                font-size: 0.95rem;
+            }
+
+            .nav-item span {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="logo-section">
+            <div class="logo-icon">
+                <i class="fas fa-shipping-fast"></i>
+            </div>
+            <div class="logo-text">
+                <div class="name">Realizado</div>
+                <div class="subtitle">Para Todos</div>
+            </div>
+        </div>
+        
+        <div class="header-actions">
+            <button class="notification-btn" onclick="showNotifications()">
+                <i class="fas fa-bell"></i>
+                <span class="notification-badge">3</span>
+            </button>
+            
+            <div class="user-info">
+                <div class="user-name">Juan Pérez</div>
+                <div class="user-role">Admin 👨‍💼</div>
+            </div>
+            
+            <div class="user-avatar" onclick="showProfile()">
+                JP
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Menu Card -->
+        <div class="menu-card">
+            <div class="menu-item active" onclick="navigate('resumen')">
+                <div class="menu-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <span class="menu-text">Resumen</span>
+                <span class="menu-emoji">📊</span>
+            </div>
+
+            <div class="menu-item" onclick="navigate('envios')">
+                <div class="menu-icon">
+                    <i class="fas fa-truck-fast"></i>
+                </div>
+                <span class="menu-text">Mis Envíos</span>
+                <span class="menu-emoji">🚚</span>
+            </div>
+
+            <div class="menu-item" onclick="navigate('direcciones')">
+                <div class="menu-icon">
+                    <i class="fas fa-map-marked-alt"></i>
+                </div>
+                <span class="menu-text">Direcciones</span>
+                <span class="menu-emoji">📍</span>
+            </div>
+
+            <div class="menu-item" onclick="navigate('pagos')">
+                <div class="menu-icon">
+                    <i class="fas fa-credit-card"></i>
+                </div>
+                <span class="menu-text">Pagos</span>
+                <span class="menu-emoji">💳</span>
+            </div>
+
+            <div class="menu-item" onclick="navigate('recompensas')">
+                <div class="menu-icon">
+                    <i class="fas fa-gift"></i>
+                </div>
+                <span class="menu-text">Recompensas</span>
+                <span class="menu-emoji">🎁</span>
+            </div>
+
+            <div class="menu-item" onclick="navigate('configuracion')">
+                <div class="menu-icon">
+                    <i class="fas fa-cog"></i>
+                </div>
+                <span class="menu-text">Configuración</span>
+                <span class="menu-emoji">⚙️</span>
+            </div>
+
+            <div class="menu-item logout" onclick="logout()">
+                <div class="menu-icon">
+                    <i class="fas fa-sign-out-alt"></i>
+                </div>
+                <span class="menu-text">Cerrar sesión</span>
+                <span class="menu-emoji">👋</span>
+            </div>
+        </div>
+
+        <!-- Promo Card -->
+        <div class="promo-card">
+            <div class="promo-content">
+                <div class="promo-title">
+                    ¡Oferta Especial! 🎉
+                </div>
+                <p class="promo-text">
+                    Envía 5 paquetes y recibe el 6to a mitad de precio. ¡No puedes dejar pasar esta oportunidad! ⚡
+                </p>
+                <button class="promo-btn" onclick="claimOffer()">
+                    <i class="fas fa-rocket"></i>
+                    Reclamar Ahora
+                </button>
+            </div>
+        </div>
+
+        <!-- Envíos Recientes -->
+        <div class="section-header">
+            <h2 class="section-title">Envíos Recientes</h2>
+            <a href="#" class="view-all" onclick="viewAll(event)">
+                Ver todos
+                <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+
+        <!-- Envío Cards -->
+        <div class="envio-card" onclick="viewDetails('ECR-2024-001234')">
+            <div class="envio-header">
+                <div class="envio-icon">
+                    📦
+                </div>
+                <div class="envio-info">
+                    <div class="envio-code">ECR-2024-001234</div>
+                    <div class="envio-route">
+                        <i class="fas fa-route"></i>
+                        Lima → Lima
+                    </div>
+                </div>
+            </div>
+            <div class="envio-footer">
+                <span class="status-badge entregado">
+                    <i class="fas fa-check-circle"></i>
+                    ✅ Entregado
+                </span>
+                <span class="envio-date">
+                    <i class="far fa-calendar"></i>
+                    15 Nov 2024
+                </span>
+            </div>
+        </div>
+
+        <div class="envio-card" onclick="viewDetails('ECR-2024-001256')">
+            <div class="envio-header">
+                <div class="envio-icon">
+                    🚚
+                </div>
+                <div class="envio-info">
+                    <div class="envio-code">ECR-2024-001256</div>
+                    <div class="envio-route">
+                        <i class="fas fa-route"></i>
+                        Trujillo → Piura
+                    </div>
+                </div>
+            </div>
+            <div class="envio-footer">
+                <span class="status-badge transito">
+                    <i class="fas fa-shipping-fast"></i>
+                    🚀 En Tránsito
+                </span>
+                <span class="envio-date">
+                    <i class="far fa-calendar"></i>
+                    27 Nov 2024
+                </span>
+            </div>
+        </div>
+
+        <div class="envio-card" onclick="viewDetails('ECR-2024-001279')">
+            <div class="envio-header">
+                <div class="envio-icon">
+                    📮
+                </div>
+                <div class="envio-info">
+                    <div class="envio-code">ECR-2024-001279</div>
+                    <div class="envio-route">
+                        <i class="fas fa-route"></i>
+                        Lima → Cusco
+                    </div>
+                </div>
+            </div>
+            <div class="envio-footer">
+                <span class="status-badge pendiente">
+                    <i class="fas fa-clock"></i>
+                    ⏳ Pendiente
+                </span>
+                <span class="envio-date">
+                    <i class="far fa-calendar"></i>
+                    27 Nov 2024
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Action Button -->
+    <button class="fab-btn" onclick="newShipment()" title="Nuevo Envío">
+        <i class="fas fa-plus"></i>
+    </button>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <div class="nav-menu">
+            <a href="#" class="nav-item active" onclick="setActive(event, 'principal')">
+                <i class="fas fa-home"></i>
+                <span>Principal</span>
+            </a>
+            <a href="#" class="nav-item" onclick="setActive(event, 'paquetes')">
+                <i class="fas fa-box"></i>
+                <span>Paquetes</span>
+            </a>
+            <a href="#" class="nav-item" onclick="setActive(event, 'admin')">
+                <i class="fas fa-user-shield"></i>
+                <span>Admin</span>
+            </a>
+            <button class="client-btn" onclick="clientArea()">
+                <i class="fas fa-user"></i>
+                Cliente
+            </button>
+        </div>
+    </nav>
+
+    <script>
+        // Navigation functions
+        function navigate(section) {
+            // Remove active class from all menu items
+            document.querySelectorAll('.menu-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            // Add active to clicked item
+            event.currentTarget.classList.add('active');
+            
+            console.log(`Navegando a: ${section}`);
+            alert(`🎯 Navegando a la sección: ${section.toUpperCase()} ✨`);
+        }
+
+        function showNotifications() {
+            alert('🔔 Tienes 3 notificaciones nuevas:\n\n📦 Paquete ECR-001256 en camino\n✅ Paquete ECR-001234 entregado\n🎁 Nueva oferta disponible');
+        }
+
+        function showProfile() {
+            alert('👤 Perfil de Usuario\n\n👨‍💼 Juan Pérez\n📧 juan.perez@email.com\n📱 +51 987 654 321');
+        }
+
+        function logout() {
+            if (confirm('¿Estás seguro de que deseas cerrar sesión? 👋')) {
+                alert('👋 Sesión cerrada exitosamente. ¡Hasta pronto! 😊');
+            }
+        }
+
+        function claimOffer() {
+            alert('🎉 ¡Oferta reclamada exitosamente!\n\n🎁 Ahora tienes descuento en tu próximo envío\n✨ Revisa tu email para más detalles');
+        }
+
+        function viewAll(e) {
+            e.preventDefault();
+            alert('📋 Mostrando todos los envíos... 🚚\n\nTotal de envíos: 25\n✅ Entregados: 20\n🚀 En tránsito: 3\n⏳ Pendientes: 2');
+        }
+
+        function viewDetails(code) {
+            alert(`📦 Detalles del envío: ${code}\n\n🔍 Estado: Actualizado\n📍 Ubicación actual: En ruta\n⏰ Entrega estimada: 2-3 días\n📱 Seguimiento en tiempo real disponible`);
+        }
+
+        function newShipment() {
+            alert('✨ Crear Nuevo Envío 📦\n\n📝 Completa los siguientes datos:\
